@@ -40,4 +40,8 @@
         </plugins>
     </build>
 
+    <modules>
+        <module>sb-swagger</module>
+    </modules>
+
 </project>
