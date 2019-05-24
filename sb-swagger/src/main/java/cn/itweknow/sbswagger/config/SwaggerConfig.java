@@ -35,7 +35,7 @@ public class SwaggerConfig {
                 .build()
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.GET, newArrayList(
+                .globalResponseMessage(RequestMethod.GET, new ArrayList[] (
                         new ResponseMessageBuilder()
                                 .code(500)
                                 .message("服务器发生异常")
