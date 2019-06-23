@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itweknow.sbmybatis.mapper.ClazzMapper">
+<resultMap id="BaseResultMap" type="cn.itweknow.sbmybatis.model.dao.Clazz">
+  <id column="id" jdbcType="INTEGER" property="id" />
+  <result column="name" jdbcType="VARCHAR" property="name" />
+</resultMap>
+
+<resultMap id="ClazzExtendMap" type="cn.itweknow.sbmybatis.model.dao.ClazzExtend">
+  <id column="id" jdbcType="INTEGER" property="id" />
+  <result column="name" jdbcType="VARCHAR" property="name" />
+  <collection property="students" ofType="cn.itweknow.sbmybatis.model.dao.Student">
+    <result column="sId" property="id"/>
+    <result column="sName" property="name"/>
+    <result column="sAge" property="age"/>
+    <result column="sClazzId" property="clazzId"/>
+    <result column="sNumber" property="number"/>
+  </collection>
+</resultMap>
+
+<select id="selectWithStudentsById" resultMap="ClazzExtendMap">
+
+    select
+      c.id as id,
+      c.name as name,
+      s.id as sId,
+      s.name as sName,
+      s.age as sAge,
+      s.clazz_id as sClazzId,
+      s.number as sNumber
+    from t_clazz as c
+      left join t_student as s on s.clazz_id = c.id
+    where c.id = #{id}
+  </select>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itweknow.sbmybatis.mapper.StudentMapper">
+  <resultMap id="BaseResultMap" type="cn.itweknow.sbmybatis.model.dao.Student">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="clazz_id" jdbcType="INTEGER" property="clazzId" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+  </resultMap>
+
+  <insert id="insert" parameterType="cn.itweknow.sbmybatis.model.dao.Student" useGeneratedKeys="true" keyProperty="id">
+    insert into t_student(name,age,clazz_id,number) values
+    (#{name},#{age},#{clazzId},#{number})
+  </insert>
+
+  <update id="updateIgnoreNullById">
+    update t_student
+    <set>
+      <if test="student.name != null">
+        name = #{student.name}
+      </if>
+      <if test="student.age != null">
+        age = #{student.age}
+      </if>
+      <if test="student.clazzId != null">
+        clazz_id = #{student.clazzId}
+      </if>
+      <if test="student.number != null">
+        number = #{student.number}
+      </if>
+    </set>
+    where id = #{student.id}
+  </update>
+
+  <select id="selectById" resultMap="BaseResultMap">
+    select * from t_student where id = #{id}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from t_student where id = #{id}
+  </delete>
+
+</mapper>
