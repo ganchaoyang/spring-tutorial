@@ -1,43 +1,20 @@
 spring:
   datasource:
-    # 基本属性
-    name: dev
-    url: jdbc:mysql://localhost:3306/spring_tutorial?serverTimezone=GMT%2B8&characterEncoding=utf-8
-    username: root
-    password: 123456
-    # 可以不配置，根据url自动识别，建议配置
-    driver-class-name: com.mysql.jdbc.Driver
-    ###################以下为druid增加的配置###########################
-    type: com.alibaba.druid.pool.DruidDataSource
-    # 初始化连接池个数
-    initialSize: 5
-    # 最小连接池个数——》已经不再使用，配置了也没效果
-    minIdle: 2
-    # 最大连接池个数
-    maxActive: 20
-    # 配置获取连接等待超时的时间，单位毫秒，缺省启用公平锁，并发效率会有所下降
-    maxWait: 60000
-    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-    timeBetweenEvictionRunsMillis: 60000
-    # 配置一个连接在池中最小生存的时间，单位是毫秒
-    minEvictableIdleTimeMillis: 300000
-    # 用来检测连接是否有效的sql，要求是一个查询语句。
-    # 如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用
-    validationQuery: SELECT 1 FROM DUAL
-    # 建议配置为true，不影响性能，并且保证安全性。
-    # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
-    testWhileIdle: true
-    # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
-    testOnBorrow: false
-    # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
-    testOnReturn: false
-    # 打开PSCache，并且指定每个连接上PSCache的大小
-    poolPreparedStatements: true
-    maxPoolPreparedStatementPerConnectionSize: 20
-    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-    # 合并多个DruidDataSource的监控数据
-    useGlobalDataSourceStat: true
+    dbcp2:
+      url: jdbc:mysql://mysql:3306/spring_tutorial?serverTimezone=GMT%2B8&characterEncoding=utf-8
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+      initial-size: 5
+      min-idle: 2
+      max-total: 20
+      max-wait-millis: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+    type: org.apache.commons.dbcp2.BasicDataSource
 
 pagehelper:
   helperDialect: mysql
