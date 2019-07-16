@@ -4,7 +4,11 @@ package cn.itweknow.sbdatasource.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,10 +16,13 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 @Configuration
 @EnableConfigurationProperties({ DruidDataSourceProperties.class })
 @ConditionalOnProperty(name = "spring.datasource.druid.url")
+@MapperScan(value = { "cn.itweknow.sbdatasource.mapper" }, sqlSessionFactoryRef = "sqlSessionFactory")
 public class DruidDataSourceConfiguration {
 
     @Autowired
@@ -78,5 +85,25 @@ public class DruidDataSourceConfiguration {
         return filterRegistrationBean ;
     }
 
+
+    /**
+     * *************** 以下为Spring Boot集成MyBatis部分内容
+     */
+
+    @Bean(name = "transactionManager")
+    public DataSourceTransactionManager transactionManager(
+            @Qualifier("druidDataSource") DruidDataSource druidDataSource) {
+        return new DataSourceTransactionManager(druidDataSource);
+    }
+
+    @Bean(name = "sqlSessionFactory")
+    @ConditionalOnMissingBean(name = "sqlSessionFactory")
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("druidDataSource") DruidDataSource druidDataSource) throws Exception {
+        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(druidDataSource);
+        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
+                .getResources("classpath:sqlmap/*Mapper.xml"));
+        return sessionFactory.getObject();
+    }
 
 }
